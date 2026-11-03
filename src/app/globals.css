@@ -29,7 +29,7 @@
   --radius-pill: 999px;
 
   /* Elevation */
-  --shadow-soft: 0 12px 30px rgb(36 31 53 / 0.10);
+  --shadow-soft: 0 12px 30px rgb(36 31 53 / 0.1);
 
   /* Control sizes: h-control, min-h-button, size-fab, grid-cols-[var(--spacing-sidebar)] */
   --spacing-control: 44px;
@@ -38,11 +38,13 @@
   --spacing-sidebar: 264px;
 
   /* Type: Figtree arrives through next/font as --font-figtree */
-  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", sans-serif;
+  --font-sans:
+    var(--font-figtree), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
 
   /* Motion */
   --ease-kittie: cubic-bezier(0.22, 1, 0.36, 1);
+  --default-transition-duration: 200ms;
   --animate-rise: rise 320ms var(--ease-kittie) both;
   --animate-pop: pop 240ms var(--ease-kittie) both;
 
@@ -83,15 +85,47 @@
     outline: 3px solid var(--color-accent);
     outline-offset: 2px;
   }
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    ::before,
-    ::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
+@layer components {
+  .skip-link {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .skip-link:focus {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 50;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    border-radius: var(--radius-input);
+    background-color: var(--color-surface);
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --default-transition-duration: 0s;
+    --animate-rise: none;
+    --animate-pop: none;
+    --animate-pulse: none;
+    --animate-spin: none;
   }
 }

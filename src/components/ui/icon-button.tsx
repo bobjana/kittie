@@ -30,7 +30,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         type={type}
         className={cx(
           "inline-flex size-control shrink-0 items-center justify-center rounded-pill",
-          "transition-colors duration-200",
+          "transition-colors",
           "disabled:cursor-not-allowed disabled:opacity-50",
           VARIANT_CLASS[variant],
           className,
