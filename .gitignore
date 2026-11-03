@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+dist/
+coverage/
+.env
+.env.local
+.env.*.local
+.env.production
+.omo/
+data/
+receipts/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.DS_Store
