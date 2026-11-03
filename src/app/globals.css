@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/*
+  Kittie design system - Tailwind v4 CSS-first tokens.
+
+  Every colour, radius, elevation, control size and motion value used by
+  src/components/ui must come from this block. Add a token here instead of
+  hardcoding a value in a component.
+*/
+@theme {
+  /* Surfaces and text */
+  --color-canvas: #f7f3ff;
+  --color-surface: #ffffff;
+  --color-ink: #241f35;
+  --color-muted: #6d6585;
+  --color-border: #e7e0f5;
+
+  /* Accents and semantics */
+  --color-lavender: #ede7ff;
+  --color-mint: #d9f7e9;
+  --color-accent: #6d28d9;
+  --color-accent-strong: #4c1d95;
+  --color-success: #047857;
+  --color-danger: #b91c1c;
+
+  /* Radii: 16px inputs, 24px cards, fully rounded pills */
+  --radius-input: 16px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-soft: 0 12px 30px rgb(36 31 53 / 0.10);
+
+  /* Control sizes: h-control, min-h-button, size-fab, grid-cols-[var(--spacing-sidebar)] */
+  --spacing-control: 44px;
+  --spacing-button: 52px;
+  --spacing-fab: 64px;
+  --spacing-sidebar: 264px;
+
+  /* Type: Figtree arrives through next/font as --font-figtree */
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
+  /* Motion */
+  --ease-kittie: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-rise: rise 320ms var(--ease-kittie) both;
+  --animate-pop: pop 240ms var(--ease-kittie) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* The app shell swaps the bottom nav for the left sidebar at exactly 768px. */
+  --breakpoint-md: 768px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
