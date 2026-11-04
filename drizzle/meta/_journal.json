@@ -8,6 +8,13 @@
       "when": 1793709341164,
       "tag": "0000_jazzy_callisto",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793717269701,
+      "tag": "0001_striped_rogue",
+      "breakpoints": true
     }
   ]
 }

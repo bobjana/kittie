@@ -12,7 +12,7 @@ export const envSchema = z
     BETTER_AUTH_URL: z.url(),
     APP_URL: z.url(),
     COOKIE_SECURE: booleanFromString.optional(),
-    EMAIL_DRIVER: z.enum(["resend", "smtp"]).default("smtp"),
+    EMAIL_DRIVER: z.enum(["resend", "smtp", "fake"]).default("smtp"),
     EMAIL_FROM: z.string(),
     RESEND_API_KEY: z.string().optional(),
     SMTP_URL: z.string().optional(),
