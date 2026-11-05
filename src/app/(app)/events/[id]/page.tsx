@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import {
@@ -72,9 +73,19 @@ async function EventDetailContent({
             {formatEventMeta(detail.event)}
           </p>
         </div>
-        <Badge tone={isOpen ? "success" : "neutral"}>
-          {isOpen ? "Open" : "Closed"}
-        </Badge>
+        <div className="flex shrink-0 items-center gap-2">
+          {isOpen ? (
+            <Link
+              href={`/events/${detail.event.id}/expenses/new`}
+              className="inline-flex min-h-control items-center rounded-pill bg-accent px-5 text-base font-semibold text-white shadow-soft transition-colors hover:bg-accent-strong"
+            >
+              Add expense
+            </Link>
+          ) : null}
+          <Badge tone={isOpen ? "success" : "neutral"}>
+            {isOpen ? "Open" : "Closed"}
+          </Badge>
+        </div>
       </header>
 
       <div className="mb-6 grid gap-3 sm:grid-cols-2">
@@ -143,20 +154,22 @@ async function EventDetailContent({
         ) : (
           <ul className="flex flex-col gap-2">
             {detail.expenses.map((expense) => (
-              <li
-                key={expense.id}
-                className="flex items-center justify-between gap-3 rounded-input border border-border bg-surface px-4 py-3"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-base font-semibold text-ink">
-                    {expense.description ?? "Expense"}
-                  </p>
-                  <p className="text-sm text-muted">{expense.spentOn}</p>
-                </div>
-                <Amount
-                  minorUnits={expense.totalMinor}
-                  currency={expense.currency}
-                />
+              <li key={expense.id}>
+                <Link
+                  href={`/events/${detail.event.id}/expenses/${expense.id}`}
+                  className="flex items-center justify-between gap-3 rounded-input border border-border bg-surface px-4 py-3 transition-colors hover:bg-lavender"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-base font-semibold text-ink">
+                      {expense.description ?? "Expense"}
+                    </p>
+                    <p className="text-sm text-muted">{expense.spentOn}</p>
+                  </div>
+                  <Amount
+                    minorUnits={expense.totalMinor}
+                    currency={expense.currency}
+                  />
+                </Link>
               </li>
             ))}
           </ul>
