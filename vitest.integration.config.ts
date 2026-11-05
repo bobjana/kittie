@@ -3,7 +3,7 @@ import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
 
 const env = loadEnv("test", process.cwd(), "");
-const testDatabaseUrl = env.TEST_DATABASE_URL;
+const testDatabaseUrl = process.env.TEST_DATABASE_URL ?? env.TEST_DATABASE_URL;
 if (!testDatabaseUrl) {
   throw new Error(
     "TEST_DATABASE_URL is required for integration tests (see .env.example)",
