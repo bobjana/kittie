@@ -209,7 +209,7 @@ export function canVoidExpense(
   return (
     memberGate(actor) ??
     stateOpenGate(subject) ??
-    organizerGate(actor) ??
+    voidGate(actor, subject) ??
     allow()
   );
 }
@@ -286,6 +286,24 @@ function organizerGate(actor: Actor): PermissionResult | null {
   return denial(
     PERMISSION_CODES.NOT_ORGANIZER,
     "only the organizer may perform this action",
+  );
+}
+
+/**
+ * Voiding is allowed for the capturer (row 13 brief) or the organizer, while
+ * the subject is open. The denial reuses NOT_ORGANIZER so existing callers
+ * keep one code for "not privileged to void".
+ */
+function voidGate(actor: Actor, subject: ExpenseSubject): PermissionResult {
+  if (
+    actor.kind === "organizer" ||
+    actor.memberId === subject.capturerMemberId
+  ) {
+    return allow();
+  }
+  return denial(
+    PERMISSION_CODES.NOT_ORGANIZER,
+    "only the capturer or the organizer may void this expense",
   );
 }
 

@@ -13,6 +13,9 @@
  * - The capturer is "capt", the organizer is "org". Participants of the
  *   expense under test: org (0), capt (2000), part (1000), zero (0).
  *   Total is 10000 minor units.
+ * - Row 13 brief: void is capturer OR organizer while the subject is open,
+ *   so the matrix rows below reflect that (row 6's organizer-only cut was
+ *   refined when void shipped).
  */
 import { describe, expect, it } from "vitest";
 import {
@@ -113,7 +116,7 @@ const matrixRows: MatrixRow[] = [
     removeMember: d(C.NOT_ORGANIZER),
     close: d(C.NOT_ORGANIZER),
     reopen: d(C.EVENT_NOT_CLOSED),
-    voidExpense: d(C.NOT_ORGANIZER),
+    voidExpense: "allow",
     removeParticipant: "allow",
   },
   {
