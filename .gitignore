@@ -24,10 +24,10 @@ playwright-report/
 .env.*.local
 .env.production
 
-# local data / uploads
+# local data / uploads (anchor to the repo root so source dirs named receipts/ are not ignored)
 .omo/
 data/
-receipts/
+/receipts/
 
 # typescript
 *.tsbuildinfo
