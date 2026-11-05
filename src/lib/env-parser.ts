@@ -18,7 +18,7 @@ export const envSchema = z
     SMTP_URL: z.string().optional(),
     GEMINI_API_KEY: z.string().optional(),
     GEMINI_MODEL: z.string().default("gemini-2.5-flash"),
-    OCR_PROVIDER: z.enum(["gemini", "fake"]).default("gemini"),
+    OCR_PROVIDER: z.enum(["gemini", "fake", "fail"]).default("gemini"),
     OCR_INLINE: booleanFromString.default(false),
     OCR_MONTHLY_JOB_CAP: z.coerce.number().int().positive().default(10000),
     RECEIPT_STORAGE_DIR: z.string().default("receipts"),

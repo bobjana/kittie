@@ -17,7 +17,7 @@
     "db:migrate": "bun run src/db/migrate.ts",
     "db:seed": "bun run src/db/seed.ts",
     "db:reset": "bun run scripts/reset-db.ts",
-    "worker": "echo 'worker: pending todo 16, OCR and notification jobs'",
+    "worker": "bun run src/worker.ts",
     "verify": "bun run typecheck && bun run lint && bun run test && bun run test:integration && bun run build && bun run test:e2e"
   },
   "dependencies": {
