@@ -1,9 +1,6 @@
 import { env } from "@/lib/env";
 import { getOcrJob, processOcrJob } from "@/services/ocr";
-import {
-  createReceipt,
-  receiptErrorToResponse,
-} from "@/services/receipts";
+import { createReceipt, receiptErrorToResponse } from "@/services/receipts";
 
 export async function POST(request: Request): Promise<Response> {
   let form: FormData;
@@ -45,7 +42,10 @@ export async function POST(request: Request): Promise<Response> {
         jobId: result.ocr.jobId,
         ...(job?.errorCode ? { errorCode: job.errorCode } : {}),
       };
-      return Response.json({ receiptId: result.receiptId, ocr }, { status: 201 });
+      return Response.json(
+        { receiptId: result.receiptId, ocr },
+        { status: 201 },
+      );
     }
     return Response.json(result, { status: 201 });
   } catch (error) {

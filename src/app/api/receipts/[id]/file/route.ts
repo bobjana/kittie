@@ -1,7 +1,4 @@
-import {
-  getReceiptFile,
-  receiptErrorToResponse,
-} from "@/services/receipts";
+import { getReceiptFile, receiptErrorToResponse } from "@/services/receipts";
 
 export async function GET(
   request: Request,
