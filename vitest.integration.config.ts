@@ -22,6 +22,11 @@ export default defineConfig({
     fileParallelism: false,
     testTimeout: 15_000,
     hookTimeout: 15_000,
-    env: { TEST_DATABASE_URL: testDatabaseUrl },
+    // The services under test import src/lib/env.ts, which fail-fasts on
+    // missing variables. Vitest does not load .env into the worker, so the
+    // variables are injected here; the explicit TEST_DATABASE_URL wins so a
+    // per-row scratch database is honoured. NODE_ENV=test keeps the app's db
+    // client on TEST_DATABASE_URL, never DATABASE_URL.
+    env: { ...env, TEST_DATABASE_URL: testDatabaseUrl },
   },
 });

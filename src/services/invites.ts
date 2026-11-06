@@ -1,7 +1,8 @@
 import { createHash, randomBytes } from "node:crypto";
 import { and, asc, desc, eq, isNull, ne } from "drizzle-orm";
 import { db } from "@/db/client";
-import { eventInvites, eventMembers } from "@/db/schema";
+import { eventInvites, eventMembers, events } from "@/db/schema";
+import { canInviteMember, PERMISSION_CODES } from "@/domain/permissions";
 import {
   isSafeInviteToken,
   isValidEmail,
@@ -9,6 +10,7 @@ import {
 } from "@/lib/auth-helpers";
 import {
   AuthorizationError,
+  assertPermission,
   requireEventMember,
   requireOrganizer,
   requireSession,
@@ -104,6 +106,22 @@ export function inviteErrorToResponse(error: unknown): Response | null {
 }
 
 /** Creates or refreshes a pending member and its invite; organizer only. */
+/** A closed event is read-only for every organizer invite write. */
+function assertInvitesAllowed(
+  event: typeof events.$inferSelect,
+  organizerMemberId: string,
+): void {
+  assertPermission(
+    canInviteMember(
+      { memberId: organizerMemberId, kind: "organizer" },
+      {
+        state: event.status === "closed" ? "closed" : "open",
+        capturerMemberId: organizerMemberId,
+      },
+    ),
+  );
+}
+
 export async function inviteMember(
   eventId: string,
   emailInput: unknown,
@@ -112,6 +130,7 @@ export async function inviteMember(
   invite: InviteSummary;
 }> {
   const { event, member: organizer } = await requireOrganizer(eventId);
+  assertInvitesAllowed(event, organizer.id);
 
   const email =
     typeof emailInput === "string" ? normalizeEmail(emailInput) : "";
@@ -330,6 +349,7 @@ export async function resendInvite(
   memberId: string,
 ): Promise<InviteSummary> {
   const { event, member: organizer } = await requireOrganizer(eventId);
+  assertInvitesAllowed(event, organizer.id);
 
   const member = await db.query.eventMembers.findFirst({
     where: and(
@@ -425,7 +445,8 @@ export async function revokeInvite(
   eventId: string,
   memberId: string,
 ): Promise<void> {
-  const { member: organizer } = await requireOrganizer(eventId);
+  const { event, member: organizer } = await requireOrganizer(eventId);
+  assertInvitesAllowed(event, organizer.id);
 
   const member = await db.query.eventMembers.findFirst({
     where: and(
@@ -541,6 +562,19 @@ export async function acceptInvite(
 
   if (invite.acceptedAt) {
     return { eventId: invite.eventId };
+  }
+
+  // A closed event is read-only: accepting an invite would change the
+  // member set the frozen settlement snapshot was computed from.
+  const event = await db.query.events.findFirst({
+    where: eq(events.id, invite.eventId),
+  });
+  if (!event || event.status === "closed") {
+    throw new AuthorizationError(
+      409,
+      PERMISSION_CODES.EVENT_CLOSED,
+      "the event is closed and read-only",
+    );
   }
 
   const now = new Date();
