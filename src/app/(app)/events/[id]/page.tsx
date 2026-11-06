@@ -74,6 +74,12 @@ async function EventDetailContent({
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href={`/events/${detail.event.id}/history`}
+            className="inline-flex min-h-control items-center rounded-pill border border-border bg-surface px-4 text-base font-semibold text-ink transition-colors hover:bg-lavender"
+          >
+            History
+          </Link>
           {isOpen ? (
             <Link
               href={`/events/${detail.event.id}/expenses/new`}

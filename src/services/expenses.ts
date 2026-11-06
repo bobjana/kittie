@@ -1486,8 +1486,15 @@ export async function voidExpense(
         entityType: "expense",
         entityId: expenseId,
         action: "expense.void",
-        before: { status: lockedExpense.status },
-        after: { status: "voided", voidReason: reason },
+        before: {
+          status: lockedExpense.status,
+          totalMinor: lockedExpense.totalMinor,
+        },
+        after: {
+          status: "voided",
+          totalMinor: lockedExpense.totalMinor,
+          voidReason: reason,
+        },
       },
       tx,
     );
