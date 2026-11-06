@@ -1,5 +1,10 @@
 import { client } from "@/db/client";
 import {
+  claimNextNotificationJob,
+  processNotificationJob,
+  reclaimStaleNotificationJobs,
+} from "@/services/notifications";
+import {
   claimNextOcrJob,
   processOcrJob,
   reclaimStaleOcrJobs,
@@ -25,9 +30,15 @@ async function main(): Promise<void> {
   while (!shuttingDown) {
     try {
       await reclaimStaleOcrJobs();
+      await reclaimStaleNotificationJobs();
       const claimed = await claimNextOcrJob();
       if (claimed === null) {
-        await sleep(POLL_INTERVAL_MS);
+        const notification = await claimNextNotificationJob();
+        if (notification === null) {
+          await sleep(POLL_INTERVAL_MS);
+          continue;
+        }
+        await processNotificationJob(notification.jobId);
         continue;
       }
       await processOcrJob(claimed.jobId);
